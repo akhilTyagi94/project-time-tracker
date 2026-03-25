@@ -58,7 +58,7 @@ export default async function TimeLogsPage() {
                 <table className="logs-table">
                     <thead>
                         <tr>
-                            <th width="40"><input type="checkbox" /></th>
+                            <th style={{ width: 40 }}><input type="checkbox" /></th>
                             <th>Task & Project</th>
                             <th>Date</th>
                             <th>Description</th>
@@ -67,7 +67,7 @@ export default async function TimeLogsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {timeLogs.map((log) => {
+                        {timeLogs.map((log: any) => {
                             const hours = Math.floor(log.timeSpentMinutes / 60);
                             const minutes = log.timeSpentMinutes % 60;
                             const formattedTime = `${hours}h ${minutes}m`;

@@ -50,10 +50,10 @@ export default async function ProjectsPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {projects.map((project) => {
+                        {projects.map((project: any) => {
                             // Calculate actual hours
-                            const totalMinutes = project.tasks.reduce((acc, task) => {
-                                return acc + task.timeLogs.reduce((accLog, log) => accLog + log.timeSpentMinutes, 0);
+                            const totalMinutes = project.tasks.reduce((acc: number, task: any) => {
+                                return acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
                             }, 0);
 
                             const actualHours = (totalMinutes / 60).toFixed(1);

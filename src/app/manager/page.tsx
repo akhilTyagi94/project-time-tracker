@@ -22,18 +22,18 @@ export default async function ManagerDashboard() {
     });
 
     // Calculate high level metrics
-    const overBudgetProjects = projects.filter(project => {
-        const totalMinutes = project.tasks.reduce((acc, task) => {
-            return acc + task.timeLogs.reduce((accLog, log) => accLog + log.timeSpentMinutes, 0);
+    const overBudgetProjects = projects.filter((project: any) => {
+        const totalMinutes = project.tasks.reduce((acc: number, task: any) => {
+            return acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
         }, 0);
         return (totalMinutes / 60) > project.quotedHours;
     });
 
-    const totalTeamCapacity = users.reduce((acc, user) => acc + user.capacityHours, 0);
+    const totalTeamCapacity = users.reduce((acc: number, user: any) => acc + user.capacityHours, 0);
 
     // Weekly logged hours (mock: using all time for MVP demonstration)
-    const totalTeamLoggedMinutes = users.reduce((acc, user) => {
-        return acc + user.timeLogs.reduce((accLog, log) => accLog + log.timeSpentMinutes, 0);
+    const totalTeamLoggedMinutes = users.reduce((acc: number, user: any) => {
+        return acc + user.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
     }, 0);
     const totalTeamLoggedHours = totalTeamLoggedMinutes / 60;
 
@@ -80,7 +80,7 @@ export default async function ManagerDashboard() {
                         <h3>Active Projects</h3>
                         <Target className="metric-icon" size={20} />
                     </div>
-                    <div className="metric-value">{projects.filter(p => p.status === 'ACTIVE').length}</div>
+                    <div className="metric-value">{projects.filter((p: any) => p.status === 'ACTIVE').length}</div>
                     <div className="metric-trend">
                         <span>Across {users.length} team members</span>
                     </div>
@@ -94,8 +94,8 @@ export default async function ManagerDashboard() {
                     </div>
 
                     <div className="resource-list">
-                        {users.map(user => {
-                            const minutes = user.timeLogs.reduce((acc, log) => acc + log.timeSpentMinutes, 0);
+                        {users.map((user: any) => {
+                            const minutes = user.timeLogs.reduce((acc: number, log: any) => acc + log.timeSpentMinutes, 0);
                             const hoursLogged = (minutes / 60).toFixed(1);
                             const utilization = Math.min(100, (parseFloat(hoursLogged) / user.capacityHours) * 100);
                             const isOverUtilized = utilization > 100;
@@ -141,9 +141,9 @@ export default async function ManagerDashboard() {
                                 <p>All projects are currently under budget.</p>
                             </div>
                         ) : (
-                            overBudgetProjects.map(project => {
-                                const totalMinutes = project.tasks.reduce((acc, task) => {
-                                    return acc + task.timeLogs.reduce((accLog, log) => accLog + log.timeSpentMinutes, 0);
+                            overBudgetProjects.map((project: any) => {
+                                const totalMinutes = project.tasks.reduce((acc: number, task: any) => {
+                                    return acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
                                 }, 0);
                                 const actualHours = (totalMinutes / 60).toFixed(1);
 
