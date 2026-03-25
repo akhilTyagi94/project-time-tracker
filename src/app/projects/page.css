@@ -1,0 +1,205 @@
+.projects-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.header-actions .btn-secondary.active {
+    background: var(--surface-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.projects-table-container {
+    padding: 0;
+    overflow: hidden;
+}
+
+.projects-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.projects-table th {
+    text-align: left;
+    padding: 1rem 1.5rem;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.2);
+}
+
+.projects-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.project-row {
+    transition: background-color 0.2s ease;
+}
+
+.project-row:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.project-name-link {
+    font-weight: 600;
+    color: var(--foreground);
+    transition: color 0.2s ease;
+}
+
+.project-name-link:hover {
+    color: var(--primary-hover);
+}
+
+.client-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.client-name {
+    font-weight: 500;
+}
+
+.deal-id {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.manager-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.avatar-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.progress-cell {
+    width: 200px;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+}
+
+.progress-text .muted {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+.progress-bar-fill.primary {
+    background: var(--primary);
+}
+
+.progress-bar-fill.danger {
+    background: var(--danger);
+}
+
+.status-badge {
+    display: inline-flex;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.status-badge.at_risk {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.status-badge.completed {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+}
+
+.icon-btn.action-menu-btn {
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+}
+
+.project-row:hover .action-menu-btn {
+    opacity: 1;
+}
+
+.action-menu-btn:hover {
+    background: var(--surface-hover);
+}
+
+.empty-row {
+    text-align: center;
+    padding: 3rem 1.5rem !important;
+    color: #94a3b8;
+}
+
+.text-danger {
+    color: var(--danger);
+}

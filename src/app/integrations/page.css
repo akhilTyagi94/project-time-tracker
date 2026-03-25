@@ -1,0 +1,163 @@
+.integrations-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+.integration-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.integration-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.integration-card.inactive {
+    opacity: 0.7;
+    filter: grayscale(0.5);
+    transition: all 0.2s ease;
+}
+
+.integration-card.inactive:hover {
+    opacity: 1;
+    filter: grayscale(0);
+}
+
+.integration-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.integration-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.integration-logo.hubspot {
+    background: #ff7a59;
+    /* HubSpot Orange */
+    box-shadow: 0 4px 14px rgba(255, 122, 89, 0.4);
+}
+
+.integration-logo.slack {
+    background: #e01e5a;
+}
+
+.integration-logo.clickup {
+    background: #7b68ee;
+}
+
+.integration-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.integration-title h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.status-connected {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--success);
+    font-weight: 500;
+}
+
+.status-disconnected {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.integration-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.description {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.mt-4 {
+    margin-top: auto;
+}
+
+.sync-simulator {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-top: auto;
+}
+
+.sync-simulator h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.muted-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.simulator-actions {
+    margin-bottom: 1.25rem;
+}
+
+.recent-syncs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 1px dashed var(--border);
+    padding-top: 1rem;
+}
+
+.sync-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.sync-time {
+    color: #94a3b8;
+}
+
+.sync-result {
+    font-weight: 500;
+}
+
+.sync-result.success {
+    color: var(--success);
+}
+
+.sync-result.neutral {
+    color: #94a3b8;
+}

@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  role          String     @default("DEV") // ADMIN, PM, DEV, SALES
+  capacityHours Float      @default(8.0)
+  costPerHour   Float      @default(50.0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  projects      Project[]  @relation("ProjectManager")
+  tasks         Task[]
+  timeLogs      TimeLog[]
+}
+
+model Project {
+  id           String      @id @default(cuid())
+  name         String
+  clientName   String?
+  dealId       String?     // External HubSpot Deal ID
+  startDate    DateTime?
+  endDate      DateTime?
+  quotedHours  Float
+  status       String      @default("ACTIVE") // ACTIVE, AT_RISK, COMPLETED, ON_HOLD
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  
+  managerId    String?
+  manager      User?       @relation("ProjectManager", fields: [managerId], references: [id])
+  
+  milestones   Milestone[]
+  tasks        Task[]
+}
+
+model Milestone {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name        String
+  dueDate     DateTime?
+  status      String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  tasks       Task[]
+}
+
+model Task {
+  id             String     @id @default(cuid())
+  title          String
+  description    String?
+  
+  projectId      String
+  project        Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  milestoneId    String?
+  milestone      Milestone? @relation(fields: [milestoneId], references: [id])
+  
+  assignedToId   String?
+  assignedTo     User?      @relation(fields: [assignedToId], references: [id])
+  
+  estimatedHours Float      @default(0.0)
+  status         String     @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  
+  timeLogs       TimeLog[]
+}
+
+model TimeLog {
+  id               String   @id @default(cuid())
+  timeSpentMinutes Int
+  description      String?
+  billable         Boolean  @default(true)
+  date             DateTime @default(now())
+  startTime        DateTime?
+  endTime          DateTime?
+  
+  taskId           String
+  task             Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Alert {
+  id          String     @id @default(cuid())
+  type        String     // OVER_BUDGET, DELAYED_TASK, EFFICIENCY_DROP
+  message     String
+  readStatus  Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+}

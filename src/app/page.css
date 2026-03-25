@@ -1,0 +1,170 @@
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+.date-display {
+    font-weight: 500;
+    color: var(--primary);
+    background: rgba(139, 92, 246, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #94a3b8;
+}
+
+.metric-header h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.metric-icon {
+    color: var(--secondary);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.metric-trend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.metric-trend.positive {
+    color: var(--success);
+}
+
+.metric-trend.negative {
+    color: var(--warning);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.3);
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.task-item:hover {
+    background: rgba(15, 23, 42, 0.6);
+    border-color: var(--primary);
+    transform: translateX(2px);
+}
+
+.task-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.task-meta {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.timer-btn-small {
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+}
+
+.activity-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    background: rgba(15, 23, 42, 0.2);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.empty-icon {
+    opacity: 0.5;
+}
