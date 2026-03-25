@@ -1,8 +1,20 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Clock, FolderKanban, Users, Settings } from 'lucide-react';
 import './Sidebar.css';
 
+const navItems = [
+    { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/time', label: 'Time Logs', icon: Clock },
+    { href: '/projects', label: 'Projects', icon: FolderKanban },
+    { href: '/manager', label: 'Team', icon: Users },
+];
+
 export default function Sidebar() {
+    const pathname = usePathname();
+
     return (
         <aside className="sidebar glass-panel">
             <div className="sidebar-logo">
@@ -12,30 +24,20 @@ export default function Sidebar() {
 
             <nav className="sidebar-nav">
                 <ul>
-                    <li>
-                        <Link href="/" className="nav-item active">
-                            <LayoutDashboard size={20} />
-                            <span>Dashboard</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/time" className="nav-item">
-                            <Clock size={20} />
-                            <span>Time Logs</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/projects" className="nav-item">
-                            <FolderKanban size={20} />
-                            <span>Projects</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="/manager" className="nav-item">
-                            <Users size={20} />
-                            <span>Team</span>
-                        </Link>
-                    </li>
+                    {navItems.map(({ href, label, icon: Icon }) => {
+                        const isActive = href === '/'
+                            ? pathname === '/'
+                            : pathname.startsWith(href);
+
+                        return (
+                            <li key={href}>
+                                <Link href={href} className={`nav-item ${isActive ? 'active' : ''}`}>
+                                    <Icon size={20} />
+                                    <span>{label}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
 

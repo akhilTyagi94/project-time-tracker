@@ -1,0 +1,54 @@
+﻿
+> white-meteoroid@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 2.5s
+  Running TypeScript ...
+  Finished TypeScript in 3.9s ...
+  Collecting page data using 10 workers ...
+  Generating static pages using 10 workers (0/8) ...
+node.exe : Error occurred 
+prerendering page "/time". Read more: 
+https://nextjs.org/docs/messages/prere
+nder-error
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpec 
+   ified: (Error occurred ...prerend  
+  er-error:String) [], RemoteExcept   
+ ion
+    + FullyQualifiedErrorId : NativeC 
+   ommandError
+ 
+Error 
+[PrismaClientUnknownRequestError]: 
+Invalid `prisma.user.findFirst()` 
+invocation:
+
+
+Error occurred during query execution:
+ConnectorError(ConnectorError { 
+user_facing_error: None, kind: 
+QueryError(SqliteError { 
+extended_code: 11, message: 
+Some("database disk image is 
+malformed") }), transient: false })
+    at async j (C:\Users\user\.gemini\
+antigravity\playground\white-meteoroid
+\.next\server\chunks\ssr\[root-of-the-
+server]__00dk-qo._.js:1:1297) {
+  clientVersion: '5.22.0',
+  digest: '3835786162'
+}
+Export encountered an error on 
+/time/page: /time, exiting the build.
+Γ¿» Next.js build worker exited with 
+code: 1 and signal: null

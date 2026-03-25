@@ -83,19 +83,25 @@
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    border: 8px solid var(--border);
-    border-top-color: var(--primary);
+    background: conic-gradient(var(--ring-color, var(--primary)) calc(var(--burn-rate, 0) * 1%), var(--border) 0);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transform: rotate(-45deg);
-    /* Start animation offset */
+    position: relative;
+}
+
+.budget-circle::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    background: var(--surface);
+    border-radius: 50%;
+    z-index: 0;
 }
 
 .budget-circle>* {
-    transform: rotate(45deg);
-    /* Counter rotate content */
+    z-index: 1;
 }
 
 .burn-rate {

@@ -3,10 +3,14 @@ import { notFound } from 'next/navigation';
 import { Play, Calendar, Users, Target, Clock } from 'lucide-react';
 import './page.css';
 import Link from 'next/link';
+import ProjectActions from './ProjectActions';
 
-export default async function ProjectDetailsPage({ params }: { params: { id: string } }) {
+export const dynamic = 'force-dynamic';
+
+export default async function ProjectDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     const project = await prisma.project.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: {
             manager: true,
             milestones: true,
@@ -18,6 +22,11 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
                 }
             }
         }
+    });
+
+    const users = await prisma.user.findMany({
+        select: { id: true, name: true, role: true },
+        orderBy: { name: 'asc' },
     });
 
     if (!project) {
@@ -65,10 +74,7 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
                         </span>
                     </div>
                 </div>
-                <div className="header-actions">
-                    <button className="btn-secondary">Edit Project</button>
-                    <button className="btn-primary">Add Task</button>
-                </div>
+                <ProjectActions project={project} users={users} milestones={project.milestones} />
             </header>
 
             <div className="dashboard-grid">
@@ -77,7 +83,13 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
                     <div className="card overview-card">
                         <h3>Budget Overview</h3>
                         <div className="budget-meter">
-                            <div className="budget-circle">
+                            <div 
+                                className="budget-circle"
+                                style={{
+                                    '--burn-rate': Math.min(Number(burnRate), 100),
+                                    '--ring-color': isDanger ? 'var(--danger)' : 'var(--primary)'
+                                } as React.CSSProperties}
+                            >
                                 <span className={`burn-rate ${isDanger ? 'text-danger' : ''}`}>{burnRate}%</span>
                                 <span className="label">Burned</span>
                             </div>

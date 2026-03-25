@@ -3,6 +3,8 @@ import { Target, Users, AlertTriangle, TrendingUp } from 'lucide-react';
 import './page.css';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ManagerDashboard() {
     const users = await prisma.user.findMany({
         include: {

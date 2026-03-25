@@ -2,8 +2,18 @@ import { prisma } from '@/lib/prisma';
 import { Play, Check, Filter, Search } from 'lucide-react';
 import './page.css';
 import Link from 'next/link';
+import TimeSearchInput from './TimeSearchInput';
+import TimeDeleteButton from './TimeDeleteButton';
+import TimeFilterButton from './TimeFilterButton';
+import TimeManualEntryButton from './TimeManualEntryButton';
 
-export default async function TimeLogsPage() {
+export const dynamic = 'force-dynamic';
+
+export default async function TimeLogsPage(props: { searchParams?: Promise<{ q?: string, filter?: string }> }) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.q || '';
+    const filter = searchParams?.filter || '';
+
     // Mock logged in user for MVP
     const user = await prisma.user.findFirst({
         where: { email: 'alice@onemetric.com' }
@@ -11,8 +21,26 @@ export default async function TimeLogsPage() {
 
     if (!user) return <div>User not found. Run seed script.</div>;
 
+    let dateFilter = {};
+    if (filter === 'this_week') {
+        const now = new Date();
+        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // Set to Sunday of current week
+        startOfWeek.setHours(0, 0, 0, 0);
+        dateFilter = { date: { gte: startOfWeek } };
+    }
+
     const timeLogs = await prisma.timeLog.findMany({
-        where: { userId: user.id },
+        where: { 
+            userId: user.id,
+            ...dateFilter,
+            ...(query ? {
+                OR: [
+                    { description: { contains: query } },
+                    { task: { title: { contains: query } } },
+                    { task: { project: { name: { contains: query } } } }
+                ]
+            } : {})
+        },
         include: {
             task: {
                 include: {
@@ -30,27 +58,14 @@ export default async function TimeLogsPage() {
                     <h1 className="page-title">Time Logs</h1>
                     <p className="page-subtitle">Track, review, and adjust your personal logged hours.</p>
                 </div>
-                <div className="header-actions">
-                    <div className="filter-group">
-                        <button className="btn-secondary">
-                            <Filter size={16} />
-                            <span>This Week</span>
-                        </button>
-                    </div>
-                    <button className="btn-primary">
-                        <Play size={16} />
-                        <span>Manual Entry</span>
-                    </button>
-                </div>
             </header>
 
             <div className="logs-container card">
                 <div className="logs-toolbar">
-                    <div className="search-bar">
-                        <Search size={16} className="text-muted" />
-                        <input type="text" placeholder="Search descriptions or tasks..." />
-                    </div>
-                    <div className="bulk-actions">
+                    <TimeSearchInput />
+                    <div className="toolbar-actions" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                        <TimeFilterButton />
+                        <TimeManualEntryButton />
                         <button className="btn-secondary text-sm">Submit Approvals</button>
                     </div>
                 </div>
@@ -64,6 +79,7 @@ export default async function TimeLogsPage() {
                             <th>Description</th>
                             <th>Duration</th>
                             <th>Status</th>
+                            <th style={{ width: 60, textAlign: 'center' }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,14 +116,17 @@ export default async function TimeLogsPage() {
                                             {log.billable ? 'Billable' : 'Non-Billable'}
                                         </div>
                                     </td>
+                                    <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                                        <TimeDeleteButton id={log.id} />
+                                    </td>
                                 </tr>
                             );
                         })}
 
                         {timeLogs.length === 0 && (
                             <tr>
-                                <td colSpan={6} className="empty-row">
-                                    No time logs found. Start a timer to track your work.
+                                <td colSpan={7} className="empty-row">
+                                    No time logs found matched your criteria.
                                 </td>
                             </tr>
                         )}
