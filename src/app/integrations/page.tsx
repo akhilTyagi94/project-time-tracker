@@ -1,7 +1,16 @@
 import { ArrowRightLeft, CheckCircle2, CloudLightning } from 'lucide-react';
 import './page.css';
+import { getSessionUser } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
-export default function IntegrationsPage() {
+export default async function IntegrationsPage() {
+    const session = await getSessionUser();
+    
+    // Only SUPER_ADMIN, ADMIN, and MANAGER can access this page
+    if (!session || session.role === 'USER') {
+        redirect('/');
+    }
+
     return (
         <div className="integrations-page animate-slide-in">
             <header className="page-header">

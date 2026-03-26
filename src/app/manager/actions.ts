@@ -49,3 +49,42 @@ export async function assignToManager(userId: string, managerId: string | null) 
 
     revalidatePath('/manager');
 }
+export async function createUserAction(formData: FormData) {
+    const session = await getSessionUser();
+    if (!session || (session.role !== 'SUPER_ADMIN' && session.role !== 'ADMIN')) {
+        throw new Error("Unauthorized");
+    }
+
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const role = formData.get('role') as string;
+    const managerId = formData.get('managerId') as string;
+
+    if (!name || !email || !password || !role) {
+        return { error: 'Name, email, password, and role are required.' };
+    }
+
+    try {
+        const existingUser = await prisma.user.findUnique({ where: { email } });
+        if (existingUser) {
+            return { error: 'A user with this email already exists.' };
+        }
+
+        await (prisma.user.create as any)({
+            data: {
+                name,
+                email,
+                passwordHash: password,
+                role,
+                managerId: (managerId === 'none' || !managerId) ? null : managerId,
+            }
+        });
+
+        revalidatePath('/manager');
+        return { success: true };
+    } catch (error) {
+        console.error('Failed to create user:', error);
+        return { error: 'Failed to create user. Please try again.' };
+    }
+}

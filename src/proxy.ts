@@ -5,10 +5,10 @@ export function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Public paths
-    if (pathname === '/login' || pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname === '/favicon.ico') {
+    if (pathname === '/login' || pathname === '/register' || pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname === '/favicon.ico') {
         const sessionId = request.cookies.get('session_id')?.value;
-        // If logged in and trying to access /login, redirect to /
-        if (pathname === '/login' && sessionId) {
+        // If logged in and trying to access /login or /register, redirect to /
+        if ((pathname === '/login' || pathname === '/register') && sessionId) {
             return NextResponse.redirect(new URL('/', request.url));
         }
         return NextResponse.next();

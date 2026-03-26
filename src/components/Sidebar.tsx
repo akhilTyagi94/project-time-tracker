@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Clock, FolderKanban, Users, Settings } from 'lucide-react';
+import { LayoutDashboard, Clock, FolderKanban, Users, Settings, Share2 } from 'lucide-react';
 import './Sidebar.css';
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
     { href: '/time', label: 'Time Logs', icon: Clock, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'USER'] },
     { href: '/projects', label: 'Projects', icon: FolderKanban, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'USER'] },
     { href: '/manager', label: 'Team', icon: Users, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
+    { href: '/integrations', label: 'Integrations', icon: Share2, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
 ];
 
 export default function Sidebar({ user }: { user: any }) {

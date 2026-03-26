@@ -1,6 +1,7 @@
 import './login.css';
 import { loginAction } from '@/lib/auth';
 import { Activity } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
     return (
@@ -48,6 +49,9 @@ export default function LoginPage() {
                         <p>manager@onemetric.com</p>
                         <p>user@onemetric.com</p>
                         <p className="hint">Password for all is: password123</p>
+                    </div>
+                    <div className="login-footer" style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#94a3b8' }}>
+                        Don't have an account? <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>Create one</Link>
                     </div>
                 </form>
             </div>

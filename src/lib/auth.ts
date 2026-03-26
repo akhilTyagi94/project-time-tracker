@@ -61,3 +61,42 @@ export async function getSessionUser() {
         return null;
     }
 }
+export async function registerAction(formData: FormData) {
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    if (!name || !email || !password) {
+        return { error: 'Name, email, and password are required' };
+    }
+
+    try {
+        const existingUser = await prisma.user.findUnique({ where: { email } });
+        if (existingUser) {
+            return { error: 'A user with this email already exists' };
+        }
+
+        const user = await (prisma.user.create as any)({
+            data: {
+                name,
+                email,
+                passwordHash: password, // For MVP, simple string
+                role: 'USER',
+            }
+        });
+
+        const cookieStore = await cookies();
+        cookieStore.set('session_id', user.id, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7
+        });
+
+        revalidatePath('/', 'layout');
+        return { success: true };
+    } catch (error) {
+        console.error('Registration failed:', error);
+        return { error: 'Registration failed. Please try again.' };
+    }
+}

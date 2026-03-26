@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getSessionUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import UserManagementControls from './UserManagementControls';
+import AddUserModal from './AddUserModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -66,9 +67,7 @@ export default async function ManagerDashboard() {
                 </div>
                 {isExecutive && (
                     <div className="header-actions">
-                        <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <ShieldCheck size={16} /> Security Audit
-                        </button>
+                        <AddUserModal managers={managersOnly} />
                     </div>
                 )}
             </header>
