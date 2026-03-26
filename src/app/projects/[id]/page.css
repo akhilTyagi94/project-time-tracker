@@ -323,3 +323,35 @@
 .task-row:hover .timer-btn-small.shrink {
     opacity: 1;
 }
+
+.status-select-small {
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.status-select-small:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.status-select-small.pending {
+    border-color: #94a3b8;
+    color: #94a3b8;
+}
+
+.status-select-small.in_progress {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.status-select-small.completed {
+    border-color: var(--success);
+    color: var(--success);
+}

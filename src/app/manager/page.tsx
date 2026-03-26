@@ -1,62 +1,82 @@
-import { prisma } from '@/lib/prisma';
-import { Target, Users, AlertTriangle, TrendingUp } from 'lucide-react';
+import { prisma, Prisma } from '@/lib/prisma';
+import { Target, Users, AlertTriangle, TrendingUp, ShieldCheck } from 'lucide-react';
 import './page.css';
 import Link from 'next/link';
+import { getSessionUser } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import UserManagementControls from './UserManagementControls';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ManagerDashboard() {
-    const users = await prisma.user.findMany({
+    const session = await getSessionUser();
+    if (!session || session.role === 'USER') {
+        redirect('/');
+    }
+
+    const isExecutive = session.role === 'SUPER_ADMIN' || session.role === 'ADMIN';
+
+    // Managers only see their direct reports. Executives see everyone.
+    const usersWhere: any = isExecutive ? {} : { managerId: session?.id };
+    
+    // Fetch users along with their time logs to calculate utilization
+    const users = await (prisma.user.findMany as any)({
+        where: usersWhere,
         include: {
             timeLogs: true,
             tasks: true,
-        }
+            manager: true,
+        },
+        orderBy: { role: 'asc' }
     });
 
+    // Fetch projects to compute risks
+    const projectsWhere = isExecutive ? {} : { managerId: session.id };
     const projects = await prisma.project.findMany({
+        where: projectsWhere,
         include: {
             tasks: {
-                include: {
-                    timeLogs: true
-                }
+                include: { timeLogs: true }
             }
         }
     });
 
-    // Calculate high level metrics
+    const managersOnly = isExecutive ? await prisma.user.findMany({ where: { role: 'MANAGER' } }) : [];
+
+    // Calculate metrics
     const overBudgetProjects = projects.filter((project: any) => {
-        const totalMinutes = project.tasks.reduce((acc: number, task: any) => {
-            return acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
-        }, 0);
-        return (totalMinutes / 60) > project.quotedHours;
+        const totalMinutes = project.tasks.reduce((acc: number, task: any) => acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0), 0);
+        return project.quotedHours > 0 && (totalMinutes / 60) > project.quotedHours;
     });
 
     const totalTeamCapacity = users.reduce((acc: number, user: any) => acc + user.capacityHours, 0);
-
-    // Weekly logged hours (mock: using all time for MVP demonstration)
-    const totalTeamLoggedMinutes = users.reduce((acc: number, user: any) => {
-        return acc + user.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
-    }, 0);
-    const totalTeamLoggedHours = totalTeamLoggedMinutes / 60;
-
-    const utilizationRate = Math.min(100, (totalTeamLoggedHours / totalTeamCapacity) * 100).toFixed(0);
+    const totalTeamLoggedMinutes = users.reduce((acc: number, user: any) => acc + user.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0), 0);
+    const utilizationRate = totalTeamCapacity > 0 ? Math.min(100, (totalTeamLoggedMinutes / 60 / totalTeamCapacity) * 100).toFixed(0) : 0;
 
     return (
         <div className="manager-dashboard animate-slide-in">
             <header className="page-header">
                 <div>
-                    <h1 className="page-title">Manager Overview</h1>
-                    <p className="page-subtitle">Monitor team utilization, active projects, and budget health.</p>
+                    <h1 className="page-title">{isExecutive ? 'User & Organization Management' : 'My Team Overview'}</h1>
+                    <p className="page-subtitle">
+                        {isExecutive 
+                            ? "Control security roles, hierarchy alignments, and monitor global organization utilization." 
+                            : "Monitor your team's utilization, active projects, and budget health."}
+                    </p>
                 </div>
-                <div className="header-actions">
-                    <button className="btn-secondary">Export Report</button>
-                </div>
+                {isExecutive && (
+                    <div className="header-actions">
+                        <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <ShieldCheck size={16} /> Security Audit
+                        </button>
+                    </div>
+                )}
             </header>
 
             <div className="metrics-grid">
                 <div className="metric-card card">
                     <div className="metric-header">
-                        <h3>Team Utilization</h3>
+                        <h3>{isExecutive ? 'Global Capacity Booked' : 'Team Utilization'}</h3>
                         <Users className="metric-icon" size={20} />
                     </div>
                     <div className="metric-value">{utilizationRate}%</div>
@@ -65,7 +85,6 @@ export default async function ManagerDashboard() {
                         <span>Target: 80%</span>
                     </div>
                 </div>
-
                 <div className="metric-card card">
                     <div className="metric-header">
                         <h3>Over Budget Projects</h3>
@@ -76,7 +95,6 @@ export default async function ManagerDashboard() {
                         <span>Requires immediate review</span>
                     </div>
                 </div>
-
                 <div className="metric-card card">
                     <div className="metric-header">
                         <h3>Active Projects</h3>
@@ -84,7 +102,7 @@ export default async function ManagerDashboard() {
                     </div>
                     <div className="metric-value">{projects.filter((p: any) => p.status === 'ACTIVE').length}</div>
                     <div className="metric-trend">
-                        <span>Across {users.length} team members</span>
+                        <span>Across {users.length} tracked members</span>
                     </div>
                 </div>
             </div>
@@ -92,31 +110,40 @@ export default async function ManagerDashboard() {
             <div className="content-grid manager-grid">
                 <div className="utilization-section card">
                     <div className="section-header">
-                        <h2>Team Resource Allocation</h2>
+                        <h2>{isExecutive ? 'Personnel Directory & Access Roles' : 'Team Resource Allocation'}</h2>
                     </div>
 
                     <div className="resource-list">
                         {users.map((user: any) => {
                             const minutes = user.timeLogs.reduce((acc: number, log: any) => acc + log.timeSpentMinutes, 0);
                             const hoursLogged = (minutes / 60).toFixed(1);
-                            const utilization = Math.min(100, (parseFloat(hoursLogged) / user.capacityHours) * 100);
+                            const utilization = user.capacityHours > 0 ? (parseFloat(hoursLogged) / user.capacityHours) * 100 : 0;
                             const isOverUtilized = utilization > 100;
                             const isUnderUtilized = utilization < 50;
 
                             return (
-                                <div className="resource-item" key={user.id}>
-                                    <div className="resource-info">
+                                <div className="resource-item" key={user.id} style={{ alignItems: 'flex-start' }}>
+                                    <div className="resource-info" style={{ flex: 1.5 }}>
                                         <div className="avatar-small">{user.name.substring(0, 2).toUpperCase()}</div>
-                                        <div>
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             <div className="resource-name">{user.name}</div>
-                                            <div className="resource-role">{user.role}</div>
+                                            <div className="resource-role">
+                                                {user.email} • <span style={{ color: 'var(--primary)' }}>{user.role}</span>
+                                                {user.manager ? ` (Reports to: ${user.manager.name})` : ''}
+                                            </div>
+                                            
+                                            {/* RBAC CONTROLS INSIDE THE ROW */}
+                                            {isExecutive && session.id !== user.id && (
+                                                <UserManagementControls user={user} allUsers={users} managersOnly={managersOnly} />
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="resource-metrics">
+
+                                    <div className="resource-metrics" style={{ flex: 1 }}>
                                         <div className="utilization-bar-container">
                                             <div className="utilization-labels">
-                                                <span>{utilization.toFixed(0)}% Booked</span>
-                                                <span>{hoursLogged}h / {user.capacityHours}h capacity</span>
+                                                <span>{Math.min(100, utilization).toFixed(0)}% Booked</span>
+                                                <span>{hoursLogged}h / {user.capacityHours}h</span>
                                             </div>
                                             <div className="progress-bar-bg">
                                                 <div
@@ -134,19 +161,17 @@ export default async function ManagerDashboard() {
 
                 <div className="risks-section card">
                     <div className="section-header">
-                        <h2>Project Risks</h2>
+                        <h2>{isExecutive ? 'Global Project Risks' : 'Project Risks'}</h2>
                     </div>
                     <div className="risk-list">
                         {overBudgetProjects.length === 0 ? (
                             <div className="empty-state">
                                 <Target size={32} className="empty-icon text-success" />
-                                <p>All projects are currently under budget.</p>
+                                <p>All monitored projects are under budget.</p>
                             </div>
                         ) : (
                             overBudgetProjects.map((project: any) => {
-                                const totalMinutes = project.tasks.reduce((acc: number, task: any) => {
-                                    return acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0);
-                                }, 0);
+                                const totalMinutes = project.tasks.reduce((acc: number, task: any) => acc + task.timeLogs.reduce((accLog: number, log: any) => accLog + log.timeSpentMinutes, 0), 0);
                                 const actualHours = (totalMinutes / 60).toFixed(1);
 
                                 return (
@@ -166,20 +191,6 @@ export default async function ManagerDashboard() {
                                 );
                             })
                         )}
-
-                        {/* Adding a mocked delayed task risk for demonstration */}
-                        <div className="risk-item">
-                            <div className="risk-icon">
-                                <AlertTriangle size={18} className="text-warning" />
-                            </div>
-                            <div className="risk-content">
-                                <div className="risk-title">Website Redesign (Task: QA)</div>
-                                <div className="risk-details">
-                                    Task has been pending for 5 days without updates.
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>

@@ -6,14 +6,16 @@ import { LayoutDashboard, Clock, FolderKanban, Users, Settings } from 'lucide-re
 import './Sidebar.css';
 
 const navItems = [
-    { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/time', label: 'Time Logs', icon: Clock },
-    { href: '/projects', label: 'Projects', icon: FolderKanban },
-    { href: '/manager', label: 'Team', icon: Users },
+    { href: '/', label: 'Dashboard', icon: LayoutDashboard, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'USER'] },
+    { href: '/time', label: 'Time Logs', icon: Clock, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'USER'] },
+    { href: '/projects', label: 'Projects', icon: FolderKanban, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER', 'USER'] },
+    { href: '/manager', label: 'Team', icon: Users, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ user }: { user: any }) {
     const pathname = usePathname();
+
+    const visibleItems = navItems.filter(item => item.roles.includes(user?.role || 'USER'));
 
     return (
         <aside className="sidebar glass-panel">
@@ -24,7 +26,7 @@ export default function Sidebar() {
 
             <nav className="sidebar-nav">
                 <ul>
-                    {navItems.map(({ href, label, icon: Icon }) => {
+                    {visibleItems.map(({ href, label, icon: Icon }) => {
                         const isActive = href === '/'
                             ? pathname === '/'
                             : pathname.startsWith(href);
@@ -42,10 +44,10 @@ export default function Sidebar() {
             </nav>
 
             <div className="sidebar-footer">
-                <button className="nav-item">
+                <Link href="/settings" className={`nav-item ${pathname === '/settings' ? 'active' : ''}`}>
                     <Settings size={20} />
                     <span>Settings</span>
-                </button>
+                </Link>
             </div>
         </aside>
     );

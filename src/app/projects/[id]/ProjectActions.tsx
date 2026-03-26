@@ -7,9 +7,10 @@ interface ProjectActionsProps {
     project: any;
     users: any[];
     milestones: any[];
+    userRole: string;
 }
 
-export default function ProjectActions({ project, users, milestones }: ProjectActionsProps) {
+export default function ProjectActions({ project, users, milestones, userRole }: ProjectActionsProps) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -63,7 +64,9 @@ export default function ProjectActions({ project, users, milestones }: ProjectAc
     return (
         <>
             <div className="header-actions">
-                <button className="btn-secondary" onClick={() => setIsEditModalOpen(true)}>Edit Project</button>
+                {userRole !== 'USER' && (
+                    <button className="btn-secondary" onClick={() => setIsEditModalOpen(true)}>Edit Project</button>
+                )}
                 <button className="btn-primary" onClick={() => setIsTaskModalOpen(true)}>Add Task</button>
             </div>
 
@@ -107,6 +110,18 @@ export default function ProjectActions({ project, users, milestones }: ProjectAc
                                     <option value="COMPLETED">Completed</option>
                                 </select>
                             </div>
+
+                            {userRole === 'SUPER_ADMIN' && (
+                                <div className="form-group">
+                                    <label htmlFor="managerId">Project Manager</label>
+                                    <select id="managerId" name="managerId" defaultValue={project.managerId || 'none'}>
+                                        <option value="none">No Manager</option>
+                                        {users.filter(u => u.role === 'SUPER_ADMIN' || u.role === 'ADMIN' || u.role === 'MANAGER' || u.role === 'PM').map(u => (
+                                            <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
 
                             <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
                                 <button type="button" className="btn-secondary" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }} onClick={handleDelete} disabled={loading}>

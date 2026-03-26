@@ -4,9 +4,10 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Play, Pause, Square, Bell, Search, Clock, X, Minus, FolderKanban, CheckCircle2, AlertCircle } from 'lucide-react';
 import { searchItems, getActiveTasks, saveTimeLog, getAlerts, markAlertRead } from '@/lib/actions';
+import { logoutAction } from '@/lib/auth';
 import './Header.css';
 
-export default function Header() {
+export default function Header({ user }: { user: any }) {
     const router = useRouter();
 
     // Search state
@@ -384,11 +385,18 @@ export default function Header() {
                 </div>
 
                 <div className="user-profile">
-                    <div className="avatar">JD</div>
-                    <div className="user-info">
-                        <span className="user-name">John Doe</span>
-                        <span className="user-role">Project Manager</span>
+                    <div className="avatar">
+                        {user ? user.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase() : 'JD'}
                     </div>
+                    <div className="user-info">
+                        <span className="user-name">{user ? user.name : 'Unknown'}</span>
+                        <span className="user-role">{user ? user.role : 'Guest'}</span>
+                    </div>
+                    <form action={logoutAction}>
+                        <button type="submit" className="icon-btn" title="Logout" style={{ marginLeft: '1rem' }}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        </button>
+                    </form>
                 </div>
             </div>
         </header>

@@ -3,6 +3,8 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { getSessionUser } from '@/lib/auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,23 +13,33 @@ export const metadata: Metadata = {
   description: 'High-converting internal time tracking and resource management',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getSessionUser();
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <div className="layout-container">
-          <Sidebar />
-          <main className="main-content">
-            <Header />
-            <div className="page-content">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {user ? (
+            <div className="layout-container">
+              <Sidebar user={user} />
+              <main className="main-content">
+                <Header user={user} />
+                <div className="page-content">
+                  {children}
+                </div>
+              </main>
+            </div>
+          ) : (
+            <div className="auth-layout">
               {children}
             </div>
-          </main>
-        </div>
+          )}
+        </ThemeProvider>
       </body>
     </html>
   );

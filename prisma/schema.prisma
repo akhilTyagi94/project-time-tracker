@@ -14,12 +14,21 @@ model User {
   id            String     @id @default(cuid())
   name          String
   email         String     @unique
-  role          String     @default("DEV") // ADMIN, PM, DEV, SALES
+  passwordHash  String     @default("")
+  role          String     @default("USER") // SUPER_ADMIN, ADMIN, MANAGER, USER
   capacityHours Float      @default(8.0)
   costPerHour   Float      @default(50.0)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   
+  // Self-relation: A user can belong to a manager's team
+  managerId     String?
+  reports       User[]     @relation("TeamManager")
+  manager       User?      @relation("TeamManager", fields: [managerId], references: [id])
+
+  // Explicitly assigned projects a User is a member of
+  assignedProjects Project[] @relation("ProjectMembers")
+
   projects      Project[]  @relation("ProjectManager")
   tasks         Task[]
   timeLogs      TimeLog[]
@@ -40,8 +49,23 @@ model Project {
   managerId    String?
   manager      User?       @relation("ProjectManager", fields: [managerId], references: [id])
   
+  // Users assigned to work on this specific project
+  members      User[]      @relation("ProjectMembers")
+  
   milestones   Milestone[]
   tasks        Task[]
+  documents    ProjectDocument[]
+}
+
+model ProjectDocument {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  url         String
+  type        String   @default("DOC") // DOC, EXCEL, PDF, LINK
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Milestone {

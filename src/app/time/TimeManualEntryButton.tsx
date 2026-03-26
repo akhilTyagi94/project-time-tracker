@@ -2,6 +2,7 @@
 
 import { Play, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { getActiveTasks, saveTimeLog } from '@/lib/actions';
 
 export default function TimeManualEntryButton() {
@@ -55,7 +56,7 @@ export default function TimeManualEntryButton() {
                 <span>Manual Entry</span>
             </button>
 
-            {showModal && (
+            {showModal && typeof document !== 'undefined' && createPortal(
                 <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false) }}>
                     <div className="modal-content">
                         <div className="modal-header">
@@ -99,7 +100,8 @@ export default function TimeManualEntryButton() {
                             </button>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );

@@ -4,13 +4,32 @@ import { MoreVertical, LayoutGrid, List } from 'lucide-react';
 import NewProjectButton from './NewProjectButton';
 import ProjectViewToggle from './ProjectViewToggle';
 import './page.css';
+import { getSessionUser } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+    const session = await getSessionUser();
+    if (!session) redirect('/login');
+
     const { view } = await searchParams;
     const isGrid = view === 'grid';
+    
+    let whereClause: any = {};
+    if (session.role === 'MANAGER') {
+        whereClause = {
+            OR: [
+                { managerId: session.id },
+                { members: { some: { id: session.id } } }
+            ]
+        };
+    } else if (session.role === 'USER') {
+        whereClause = { members: { some: { id: session.id } } };
+    }
+
     const projects = await prisma.project.findMany({
+        where: whereClause,
         include: {
             manager: true,
             tasks: {
@@ -31,7 +50,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
                 </div>
                 <div className="header-actions">
                     <ProjectViewToggle />
-                    <NewProjectButton />
+                    {session.role !== 'USER' && <NewProjectButton />}
                 </div>
             </header>
 
