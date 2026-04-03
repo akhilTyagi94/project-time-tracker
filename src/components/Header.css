@@ -6,6 +6,7 @@
     padding: 0 2rem;
     border-bottom: 1px solid var(--border);
     z-index: 10;
+    flex-wrap: nowrap !important;
 }
 
 .header-search {
@@ -41,6 +42,8 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
+    flex-wrap: nowrap !important;
+    flex-shrink: 0 !important;
 }
 
 .timer-btn {
@@ -519,6 +522,7 @@
     transition: all 0.2s ease;
     background: transparent;
     cursor: pointer;
+    margin-right: 0.5rem;
 }
 
 .mobile-menu-btn:hover {
@@ -536,53 +540,117 @@
     }
 
     .header-search {
-        width: 240px;
+        width: 100%;
+        max-width: 400px;
     }
 }
 
 @media (max-width: 768px) {
+    .header {
+        height: 64px !important;
+        padding: 0 0.75rem !important;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
+    }
+
     .header-search {
-        flex: 1;
-        max-width: none;
+        display: none !important;
     }
 
     .header-actions {
-        gap: 0.75rem;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+        flex: none !important;
+        margin-left: auto !important;
     }
 
     .user-profile {
-        padding-left: 0.75rem;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        padding-left: 0.5rem !important;
+        border-left: none !important;
+        gap: 0.4rem !important;
+        flex-wrap: nowrap !important;
+        flex-shrink: 0 !important;
+        flex: none !important;
+    }
+
+    .user-profile form {
+        display: flex !important;
+        align-items: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .user-info {
-        display: none;
+        display: none !important;
     }
 
     .timer-btn span {
-        display: none;
-    }
-
-    .timer-btn.timer-active span {
-        display: block;
+        display: none !important;
     }
 
     .timer-btn {
-        padding: 0.5rem;
-        aspect-ratio: 1/1;
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
+        padding: 0.5rem !important;
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        flex: none !important;
     }
 
-    .timer-btn.timer-active {
-        width: auto;
-        aspect-ratio: auto;
-        padding: 0.5rem 0.75rem;
+    .avatar {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.75rem !important;
+        flex-shrink: 0 !important;
+        flex: none !important;
+    }
+
+    .icon-btn {
+        flex-shrink: 0 !important;
+        flex: none !important;
+        padding: 0.25rem !important;
     }
 }
 
 @media (max-width: 480px) {
-    .header-search {
-        display: none;
+    .header {
+        gap: 0.2rem !important;
+        padding: 0 0.5rem !important;
+    }
+
+    .header-actions {
+        gap: 0.25rem !important;
+    }
+
+    .user-profile {
+        padding-left: 0.25rem !important;
+        gap: 0.25rem !important;
+    }
+
+    .timer-btn {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+    }
+
+    .icon-btn svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    .user-profile form button {
+        margin-left: 0.15rem !important;
     }
 }

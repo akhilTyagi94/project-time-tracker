@@ -197,6 +197,7 @@ button {
   height: 100%;
   background: var(--background);
   position: relative;
+  transition: margin-left 0.3s ease;
 }
 
 .page-content {
@@ -204,6 +205,22 @@ button {
   padding: 2rem;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-overlay {
+    display: block;
+  }
 }
 
 /* Mobile Adjustments for Layout */

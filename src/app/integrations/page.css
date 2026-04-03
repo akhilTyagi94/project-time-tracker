@@ -161,3 +161,33 @@
 .sync-result.neutral {
     color: #94a3b8;
 }
+
+/* Integrations Responsive Styles */
+@media (max-width: 1024px) {
+    .integration-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .integration-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .integrations-page {
+        gap: 1.5rem;
+    }
+
+    .integration-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .integration-logo {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}

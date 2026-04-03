@@ -138,3 +138,39 @@
 .text-success {
     color: var(--success);
 }
+
+/* Manager Responsive Styles */
+@media (max-width: 1024px) {
+    .manager-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem;
+    }
+
+    .resource-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .resource-info {
+        width: 100%;
+    }
+
+    .resource-metrics {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .manager-dashboard {
+        gap: 1.5rem;
+    }
+
+    .resource-item {
+        padding: 1.25rem;
+    }
+
+    .utilization-labels {
+        font-size: 0.75rem;
+    }
+}
