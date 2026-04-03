@@ -1,9 +1,30 @@
-import './login.css';
+'use client';
+
+import { useState } from 'react';
 import { loginAction } from '@/lib/auth';
-import { Activity } from 'lucide-react';
+import { Activity, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import './login.css';
 
 export default function LoginPage() {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+
+        const formData = new FormData(e.currentTarget);
+        const result = await loginAction(formData);
+
+        if (result?.error) {
+            setError(result.error);
+            setLoading(false);
+        }
+        // Success case is handled by redirect inside loginAction
+    }
+
     return (
         <div className="login-container">
             <div className="login-card glass-panel">
@@ -15,7 +36,22 @@ export default function LoginPage() {
                     <p className="login-subtitle">Sign in to your account</p>
                 </div>
 
-                <form action={async (formData) => { 'use server'; await loginAction(formData); }} className="login-form">
+                <form onSubmit={handleSubmit} className="login-form">
+                    {error && (
+                        <div className="error-message" style={{ 
+                            color: '#ef4444', 
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            padding: '0.75rem',
+                            borderRadius: '0.5rem',
+                            fontSize: '0.875rem',
+                            marginBottom: '1rem',
+                            textAlign: 'center',
+                            border: '1px solid rgba(239, 68, 68, 0.2)'
+                        }}>
+                            {error}
+                        </div>
+                    )}
+                    
                     <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
@@ -38,8 +74,13 @@ export default function LoginPage() {
                         />
                     </div>
 
-                    <button type="submit" className="login-btn">
-                        Sign In
+                    <button type="submit" className="login-btn" disabled={loading}>
+                        {loading ? (
+                            <>
+                                <Loader2 className="spinner" size={18} />
+                                Signing in...
+                            </>
+                        ) : 'Sign In'}
                     </button>
                     
                     <div className="login-test-info">

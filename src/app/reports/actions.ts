@@ -39,7 +39,7 @@ export async function getReportData(timeRange: 'week' | 'month', viewMode: 'user
     
     // Setup generic structure based on viewMode
     if (viewMode === 'user') {
-        targetRecords = users.map(user => {
+        targetRecords = users.map((user: any) => {
             return {
                 id: user.id,
                 name: user.name,
@@ -49,8 +49,8 @@ export async function getReportData(timeRange: 'week' | 'month', viewMode: 'user
         });
     } else {
         // Group by manager/team
-        const teamsMap = new Map();
-        users.forEach(user => {
+        const teamsMap = new Map<string, any>();
+        users.forEach((user: any) => {
             const teamId = user.managerId || user.id; // Treat user as their own team if no manager
             const teamName = user.manager?.name ? `${user.manager.name}'s Team` : `${user.name} (Independent)`;
             
@@ -71,7 +71,7 @@ export async function getReportData(timeRange: 'week' | 'month', viewMode: 'user
     }
 
     // 4. Calculate aggregates for each record (user or team)
-    const processedRecords = targetRecords.map(record => {
+    const processedRecords = targetRecords.map((record: any) => {
         let totalMinutes = 0;
         let billableMinutes = 0;
         
@@ -108,9 +108,9 @@ export async function getReportData(timeRange: 'week' | 'month', viewMode: 'user
     });
 
     // 5. Aggregate system-wide top tasks
-    const allLogs = users.flatMap(u => u.timeLogs);
-    const taskMap = new Map();
-    allLogs.forEach(log => {
+    const allLogs = users.flatMap((u: any) => u.timeLogs);
+    const taskMap = new Map<string, any>();
+    allLogs.forEach((log: any) => {
         if (!log.task) return;
         const mapped = taskMap.get(log.taskId) || { id: log.taskId, title: log.task.title, minutes: 0 };
         mapped.minutes += log.timeSpentMinutes;
@@ -118,13 +118,13 @@ export async function getReportData(timeRange: 'week' | 'month', viewMode: 'user
     });
 
     const topTasks = Array.from(taskMap.values())
-        .map(t => ({ name: t.title, hours: parseFloat((t.minutes / 60).toFixed(1)) }))
+        .map((t: any) => ({ name: t.title, hours: parseFloat((t.minutes / 60).toFixed(1)) }))
         .sort((a, b) => b.hours - a.hours)
         .slice(0, 5); // Top 5 tasks
 
     // 6. Aggregate system-wide billable ratio for big chart
-    const totalSystemMinutes = allLogs.reduce((acc, log) => acc + log.timeSpentMinutes, 0);
-    const totalSystemBillable = allLogs.filter(l => l.billable).reduce((acc, log) => acc + log.timeSpentMinutes, 0);
+    const totalSystemMinutes = allLogs.reduce((acc: number, log: any) => acc + log.timeSpentMinutes, 0);
+    const totalSystemBillable = allLogs.filter((l: any) => l.billable).reduce((acc: number, log: any) => acc + log.timeSpentMinutes, 0);
 
     return {
         records: processedRecords.sort((a, b) => b.rawMetrics.totalMinutes - a.rawMetrics.totalMinutes),
