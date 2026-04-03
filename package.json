@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
+    "dev": "node scripts/prisma-setup.js && next dev",
+    "build": "node scripts/prisma-setup.js && next build",
     "start": "next start",
-    "postinstall": "prisma generate"
+    "postinstall": "node scripts/prisma-setup.js"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

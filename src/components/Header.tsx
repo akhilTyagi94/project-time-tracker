@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Play, Pause, Square, Bell, Search, Clock, X, Minus, FolderKanban, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Play, Pause, Square, Bell, Search, Clock, X, Minus, FolderKanban, CheckCircle2, AlertCircle, Menu } from 'lucide-react';
 import { searchItems, getActiveTasks, saveTimeLog, getAlerts, markAlertRead } from '@/lib/actions';
 import { logoutAction } from '@/lib/auth';
 import './Header.css';
 
-export default function Header({ user }: { user: any }) {
+export default function Header({ user, onMenuClick }: { user: any, onMenuClick?: () => void }) {
     const router = useRouter();
 
     // Search state
@@ -180,6 +180,10 @@ export default function Header({ user }: { user: any }) {
 
     return (
         <header className="header glass-panel">
+            <button className="mobile-menu-btn" onClick={onMenuClick}>
+                <Menu size={24} />
+            </button>
+
             <div className="header-search" ref={searchRef}>
                 <Search size={18} className="search-icon" />
                 <input

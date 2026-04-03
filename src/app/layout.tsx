@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Sidebar from '@/components/Sidebar';
-import Header from '@/components/Header';
+import LayoutWrapper from '@/components/LayoutWrapper';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { getSessionUser } from '@/lib/auth';
 
@@ -22,18 +21,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {user ? (
-            <div className="layout-container">
-              <Sidebar user={user} />
-              <main className="main-content">
-                <Header user={user} />
-                <div className="page-content">
-                  {children}
-                </div>
-              </main>
-            </div>
+            <LayoutWrapper user={user}>
+              {children}
+            </LayoutWrapper>
           ) : (
             <div className="auth-layout">
               {children}

@@ -509,3 +509,80 @@
 .text-warning {
     color: var(--warning);
 }
+
+/* Mobile Responsive Styles */
+.mobile-menu-btn {
+    display: none;
+    color: #94a3b8;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+    background: transparent;
+    cursor: pointer;
+}
+
+.mobile-menu-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--primary);
+}
+
+@media (max-width: 1024px) {
+    .header {
+        padding: 0 1rem;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .header-search {
+        width: 240px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-search {
+        flex: 1;
+        max-width: none;
+    }
+
+    .header-actions {
+        gap: 0.75rem;
+    }
+
+    .user-profile {
+        padding-left: 0.75rem;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .timer-btn span {
+        display: none;
+    }
+
+    .timer-btn.timer-active span {
+        display: block;
+    }
+
+    .timer-btn {
+        padding: 0.5rem;
+        aspect-ratio: 1/1;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+    }
+
+    .timer-btn.timer-active {
+        width: auto;
+        aspect-ratio: auto;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-search {
+        display: none;
+    }
+}

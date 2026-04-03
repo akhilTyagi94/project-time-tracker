@@ -152,3 +152,33 @@
         transform: scale(1) translateY(0);
     }
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 2rem 1.5rem;
+        gap: 1.5rem;
+        background: rgba(30, 41, 59, 0.6);
+        border: none;
+        border-radius: 0;
+        min-height: 100vh;
+        max-width: none;
+        justify-content: center;
+    }
+
+    .login-container {
+        padding: 0;
+    }
+
+    .login-logo h2 {
+        font-size: 1.5rem;
+    }
+
+    .login-subtitle {
+        font-size: 0.875rem;
+    }
+
+    .login-btn {
+        padding: 1rem;
+    }
+}

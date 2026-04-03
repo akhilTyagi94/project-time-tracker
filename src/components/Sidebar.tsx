@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Clock, FolderKanban, Users, Settings, Share2, BarChart } from 'lucide-react';
+import { LayoutDashboard, Clock, FolderKanban, Users, Settings, Share2, BarChart, X } from 'lucide-react';
 import './Sidebar.css';
 
 const navItems = [
@@ -14,16 +14,29 @@ const navItems = [
     { href: '/integrations', label: 'Integrations', icon: Share2, roles: ['SUPER_ADMIN', 'ADMIN', 'MANAGER'] },
 ];
 
-export default function Sidebar({ user }: { user: any }) {
+export default function Sidebar({ 
+    user, 
+    isOpen, 
+    onClose 
+}: { 
+    user: any;
+    isOpen?: boolean;
+    onClose?: () => void;
+}) {
     const pathname = usePathname();
 
     const visibleItems = navItems.filter(item => item.roles.includes(user?.role || 'USER'));
 
     return (
-        <aside className="sidebar glass-panel">
+        <aside className={`sidebar glass-panel ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-logo">
-                <div className="logo-icon">O</div>
-                <h2>OneMetric</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
+                    <div className="logo-icon">O</div>
+                    <h2>OneMetric</h2>
+                </div>
+                <button className="mobile-close-btn" onClick={onClose}>
+                    <X size={20} />
+                </button>
             </div>
 
             <nav className="sidebar-nav">

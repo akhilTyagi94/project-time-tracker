@@ -186,13 +186,15 @@ button {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  position: relative;
 }
 
 .main-content {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  min-width: 0;
+  height: 100%;
   background: var(--background);
   position: relative;
 }
@@ -201,6 +203,20 @@ button {
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Mobile Adjustments for Layout */
+@media (max-width: 1024px) {
+  .page-content {
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-content {
+    padding: 1rem;
+  }
 }
 
 /* Modal Styles */
